@@ -11,10 +11,10 @@ import (
 	"github.com/charmbracelet/wish/logging"
 	"github.com/charmbracelet/wish/scp"
 	"github.com/gliderlabs/ssh"
-	"gitlab.com/nebulaworks/eng/bazaar/prj/term-apply/pkg/applicant"
-	"gitlab.com/nebulaworks/eng/bazaar/prj/term-apply/pkg/auth"
-	"gitlab.com/nebulaworks/eng/bazaar/prj/term-apply/pkg/transfer"
-	"gitlab.com/nebulaworks/eng/bazaar/prj/term-apply/pkg/ui"
+	"github.com/nebulaworks/orion/apps/term-apply/pkg/applicant"
+	"github.com/nebulaworks/orion/apps/term-apply/pkg/auth"
+	"github.com/nebulaworks/orion/apps/term-apply/pkg/transfer"
+	"github.com/nebulaworks/orion/apps/term-apply/pkg/ui"
 )
 
 type Server struct {

@@ -8,7 +8,7 @@ import (
 	"syscall"
 	"time"
 
-	"gitlab.com/nebulaworks/eng/bazaar/prj/term-apply/pkg/server"
+	"github.com/nebulaworks/orion/apps/term-apply/pkg/server"
 )
 
 const host = "localhost"

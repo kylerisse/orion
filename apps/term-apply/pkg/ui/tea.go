@@ -5,7 +5,7 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/gliderlabs/ssh"
-	"gitlab.com/nebulaworks/eng/bazaar/prj/term-apply/pkg/applicant"
+	"github.com/nebulaworks/orion/apps/term-apply/pkg/applicant"
 )
 
 type TeaManager struct {

@@ -6,7 +6,7 @@ import (
 
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
-	"gitlab.com/nebulaworks/eng/bazaar/prj/term-apply/pkg/applicant"
+	"github.com/nebulaworks/orion/apps/term-apply/pkg/applicant"
 )
 
 type Model struct {
