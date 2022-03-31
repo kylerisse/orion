@@ -1,7 +1,6 @@
 package ui
 
 import (
-	"math/rand"
 	"time"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -9,18 +8,24 @@ import (
 
 type responseMsg struct{}
 
-func listenForActivity(sub chan struct{}) tea.Cmd {
+func (m *Model) listenForActivity(sub chan responseMsg) tea.Cmd {
 	return func() tea.Msg {
 		for {
-			time.Sleep(time.Millisecond * time.Duration(rand.Int63n(900)+100))
-			sub <- struct{}{}
+			// only send the message the message when we first
+			// find the resume
+			if m.appMgr.HasResume(m.userID) {
+				sub <- responseMsg{}
+				break
+			}
+			time.Sleep(time.Second * time.Duration(5))
 		}
+		return nil
 	}
 }
 
 // A command that waits for the activity on a channel.
-func waitForActivity(sub chan struct{}) tea.Cmd {
+func waitForActivity(sub chan responseMsg) tea.Cmd {
 	return func() tea.Msg {
-		return responseMsg(<-sub)
+		return <-sub
 	}
 }

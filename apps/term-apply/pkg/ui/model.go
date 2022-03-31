@@ -16,8 +16,8 @@ type Model struct {
 	inputs     []textinput.Model
 	cursorMode textinput.CursorMode
 	Submitted  bool
-	sub        chan struct{} // where we'll receive activity notifications
-	responses  int
+	sub        chan responseMsg // where we'll receive activity notifications
+	response   string
 	appMgr     *applicant.ApplicantManager
 	userID     string
 }
@@ -26,9 +26,10 @@ func InitialModel(am *applicant.ApplicantManager, user string) Model {
 	m := Model{
 		inputs:     make([]textinput.Model, 2),
 		checkBoxes: make([]string, 2),
-		sub:        make(chan struct{}),
+		sub:        make(chan responseMsg),
 		appMgr:     am,
 		userID:     user,
+		response:   "not found",
 	}
 
 	m.checkBoxes[0] = "Senior Software Engineer"
@@ -59,8 +60,8 @@ func InitialModel(am *applicant.ApplicantManager, user string) Model {
 func (m Model) Init() tea.Cmd {
 	return tea.Batch(
 		textinput.Blink,
-		listenForActivity(m.sub), // generate activity
-		waitForActivity(m.sub),   // wait for activity
+		m.listenForActivity(m.sub), // generate activity
+		waitForActivity(m.sub),     // wait for activity
 	)
 
 }
@@ -68,7 +69,7 @@ func (m Model) Init() tea.Cmd {
 func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case responseMsg:
-		m.responses++                    // record external activity
+		m.response = "received, thank you"
 		return m, waitForActivity(m.sub) // wait for next event
 	case tea.KeyMsg:
 		switch msg.String() {
@@ -206,7 +207,7 @@ func (m Model) View() string {
 	if m.Submitted {
 		b.WriteString(fmt.Sprintf("\n%s thank you for applying to Nebulaworks! We will follow up with you shortly via your email:%s regarding next steps\n", m.inputs[0].Value(), m.inputs[1].Value()))
 	}
-	b.WriteString(fmt.Sprintf("\n Events received: %d \n\n", m.responses))
+	b.WriteString(fmt.Sprintf("\n Resume status: %s \n\n", m.response))
 	b.WriteString(helpStyle.Render("ctrl+c to exit"))
 	b.WriteString("\n\n")
 	b.WriteString(helpStyle.Render("cursor mode is "))

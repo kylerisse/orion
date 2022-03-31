@@ -24,7 +24,7 @@ type Server struct {
 }
 
 func NewServer(host, uploadDir, dataFile string, port int) (*Server, error) {
-	am, err := applicant.NewApplicantManager(dataFile)
+	am, err := applicant.NewApplicantManager(dataFile, uploadDir)
 	if err != nil {
 		return nil, err
 	}

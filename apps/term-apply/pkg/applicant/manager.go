@@ -11,18 +11,25 @@ type ApplicantManager struct {
 	applicants []applicant
 	mu         *sync.RWMutex    // wraps applicant slice access
 	writeChan  chan []applicant // serializes csv file writes
+	resumes    *resumeWatcher
 }
 
-func NewApplicantManager(filename string) (*ApplicantManager, error) {
+func NewApplicantManager(filename, uploadDir string) (*ApplicantManager, error) {
 	if err := openOrCreateFile(filename); err != nil {
 		return nil, err
 	}
 	writeChan := make(chan []applicant)
 
+	resumes, err := newResumeWatcher(uploadDir)
+	if err != nil {
+		return nil, err
+	}
+
 	am := &ApplicantManager{
 		applicants: []applicant{},
 		mu:         &sync.RWMutex{},
 		writeChan:  writeChan,
+		resumes:    resumes,
 	}
 
 	if err := am.readDataFile(filename); err != nil {
@@ -128,4 +135,8 @@ func (a *ApplicantManager) writeDataFile(filename string, writeChan chan []appli
 			return err
 		}
 	}
+}
+
+func (a *ApplicantManager) HasResume(userID string) bool {
+	return a.resumes.isUploaded(userID)
 }
